@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.presenter">
 
+<!--    <application>-->
     <application android:name=".ui.InterviewApplication">
-        <!--    <application>-->
+        <service
+            android:name=".services.MyJobService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <activity
             android:name="com.example.presenter.ui.MainActivity"
             android:exported="true"
@@ -17,4 +22,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
