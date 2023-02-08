@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Interview</string>
+    <string name="home_fragment">Home</string>
+    <string name="music_fragment">Music</string>
+    <string name="navigate_music_list_screen">Navigate musics list screen</string>
+</resources>

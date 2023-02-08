@@ -1,24 +1,21 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
-    namespace 'com.example.interview'
-    compileSdk compile_sdk
+    namespace 'com.example.presenter'
+    compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.interview"
-        minSdk min_sdk
-        targetSdk target_sdk
-        versionCode 1
-        versionName "1.0"
+        minSdk 24
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     composeOptions {
@@ -53,9 +50,14 @@ android {
 
 dependencies {
 
-    implementation project(path: ':presenter')
     implementation project(path: ':domain')
-    implementation project(path: ':data')
+
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_ktx_version"
+    implementation "androidx.activity:activity-compose:$activity_compose"
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.3.1'
+    implementation 'androidx.fragment:fragment-ktx:1.5.5'
 
     // Android libs
     implementation "androidx.core:core-ktx:${core_ktx_version}"

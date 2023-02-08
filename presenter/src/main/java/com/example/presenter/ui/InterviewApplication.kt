@@ -1,4 +1,4 @@
-package com.example.interview
+package com.example.presenter.ui
 
 import android.app.Application
 import android.util.Log
@@ -9,7 +9,7 @@ import org.koin.core.context.startKoin
 class InterviewApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        println("OOOOOOOOOOOOYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
+        println("OOOOOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         startKoin {
             androidContext(this@InterviewApplication)
 //            modules(dataModules + domainModule + presentationModule + deviceModule)
