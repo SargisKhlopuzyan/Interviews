@@ -1,7 +1,11 @@
 package com.example.presenter.ui.home
 
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.example.presenter.services.MyJobIntentService
+import com.example.presenter.services.MyJobService
 import com.example.presenter.ui.base.BaseFragment
 import com.example.presenter.ui.theme.InterviewTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,6 +54,12 @@ class HomeFragment : BaseFragment() {
                 InterviewTheme {
                     HomeScreen(
                         viewModel = viewModel,
+                        onStartJobScheduleClicked = {
+                            startMyService()
+                        },
+                        onStartJobIntentServiceClicked = {
+                            onStartJobIntentService()
+                        },
                         onNavigateServiceScreenClicked = {
                             navigateToServiceScreen()
                         }
@@ -55,6 +67,25 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    private fun startMyService() {
+        val jobScheduler =
+            requireActivity().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val jobInfo =
+            JobInfo.Builder(123, ComponentName(requireActivity(), MyJobService::class.java))
+        val job = jobInfo.setRequiresCharging(false)
+            .setMinimumLatency(1)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+//            .setOverrideDeadline(3 * 60 * 1000)
+            .build()
+
+        jobScheduler.schedule(job)
+    }
+
+    private fun onStartJobIntentService() {
+        val mIntent = Intent(requireActivity(), MyJobIntentService::class.java)
+        MyJobIntentService.enqueueWork(requireActivity(), mIntent)
     }
 
     private fun navigateToServiceScreen() {

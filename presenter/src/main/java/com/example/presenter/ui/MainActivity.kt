@@ -1,12 +1,25 @@
 package com.example.presenter.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.presenter.R
 
+
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var updateUIReceiver: BroadcastReceiver
+
+    companion object {
+        const val ACTION = "service.to.activity.transfer"
+        const val BUNDLE_KEY_DATA = "data"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         logA("onCreate - savedInstanceState: Bundle?, persistentState: PersistableBundle?")
@@ -17,6 +30,19 @@ class MainActivity : AppCompatActivity() {
         logA("onCreate - savedInstanceState: Bundle?")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        updateUIReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                //UI update here
+                if (intent != null) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        intent.getBooleanExtra(BUNDLE_KEY_DATA, false).toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -37,11 +63,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(ACTION)
+        registerReceiver(updateUIReceiver, intentFilter)
         logA("onResume")
         super.onResume()
     }
 
     override fun onPause() {
+        unregisterReceiver(updateUIReceiver)
         logA("onPause")
         super.onPause()
     }

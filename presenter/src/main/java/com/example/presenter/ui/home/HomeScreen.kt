@@ -13,17 +13,34 @@ import com.example.presenter.R
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
+    onStartJobScheduleClicked: () -> Unit,
+    onStartJobIntentServiceClicked: () -> Unit,
     onNavigateServiceScreenClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = {
-                onNavigateServiceScreenClicked()
-            }) {
-            Text(text = stringResource(id = R.string.navigate_music_list_screen))
+        Button(onClick = {
+            onStartJobScheduleClicked()
+        }) {
+            Text(
+                text = stringResource(id = R.string.start_job_scheduler)
+            )
+        }
+        Button(onClick = {
+            onStartJobIntentServiceClicked()
+        }) {
+            Text(
+                text = stringResource(id = R.string.start_job_intent_service)
+            )
+        }
+        Button(onClick = {
+            onNavigateServiceScreenClicked()
+        }) {
+            Text(
+                text = stringResource(id = R.string.navigate_music_list_screen)
+            )
         }
     }
 }

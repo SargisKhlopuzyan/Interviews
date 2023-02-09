@@ -2,13 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.presenter">
 
-<!--    <application>-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!--    <application>-->
     <application android:name=".ui.InterviewApplication">
         <service
             android:name=".services.MyJobService"
             android:enabled="true"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".services.MyJobIntentService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <activity
             android:name="com.example.presenter.ui.MainActivity"
             android:exported="true"

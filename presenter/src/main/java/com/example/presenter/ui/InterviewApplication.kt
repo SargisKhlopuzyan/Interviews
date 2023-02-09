@@ -9,7 +9,7 @@ import org.koin.core.context.startKoin
 class InterviewApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        println("OOOOOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        println("PRESENTER - XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX - PRESENTER")
         startKoin {
             androidContext(this@InterviewApplication)
 //            modules(dataModules + domainModule + presentationModule + deviceModule)

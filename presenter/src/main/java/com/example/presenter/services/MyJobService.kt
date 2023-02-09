@@ -3,8 +3,12 @@ package com.example.presenter.services
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.AsyncTask
 import android.util.Log
+import com.example.presenter.ui.MainActivity
+import org.koin.android.scope.serviceScope
 
 // https://medium.com/@kiitvishal89/android-jobscheduler-schedule-your-jobs-like-a-master-cfa0d80e5f10
 
@@ -12,32 +16,50 @@ const val SAVED_INT_KEY = "int_key";
 
 class MyJobService : JobService() {
 
-    lateinit var params: JobParameters
+    private lateinit var params: JobParameters
     lateinit var task: CounterTask
 
-    var TAG = MyJobService::class.java.simpleName
-
     // callback from system when contraints are satisfied, start doing work
-    override fun onStartJob(params: JobParameters?): Boolean {
+    override fun onStartJob(params: JobParameters): Boolean {
+        Log.e(TAG, "onStartJob")
         // We land here when system calls our job.
-        this.params = params!!
+        this.params = params
         val start = getValue()
 
-        task = CounterTask(this, start)          // Not the best way in prod.
+        // Not the best way in prod.
+        task = CounterTask(this@MyJobService, start)
         task.execute(Unit)
 
-        return true     // Our task will run in background, we will take care of notifying the finish.
+        // Our task will run in background, we will take care of notifying the finish.
+        /**
+         *  Returning false:
+         *  means we say that our job is done, release all the wake-locks and other resources acquired on my behalf, and mark the job as done.
+         *
+         *  Returning true:
+         *  tells the system that, the job is not done right now, we do not know when it will get finished as it might be running in the background.
+         *  But once the job is finished, we will let you know. Job completion, in this case, is indicated by the jobFinished() method.
+         *  Till we call this method, system will hold on to all the resources for us.
+         */
+        return true
     }
 
     // callback from system when contraints are not satisfied, stop and/or save work
     override fun onStopJob(params: JobParameters?): Boolean {
-        task.cancel(true)       // Cancel the counter task.
-        Log.d(MyJobService::class.java.simpleName, "Job paused.")
+        // Cancel the counter task.
+        task.cancel(true)
+        Log.e(TAG, "onStopJob")
+
+        /**
+         * Returning true:
+         * means we want to job to reschedule it later when constraints are again met.
+         *
+         * Returning false:
+         * means we want to end this job entirely right now and the job scheduler will not call onStartJob() when the constraint will be satisfied again
+         * */
         return true
         // I want it to reschedule so returned true, if we would have returned false, then job would have ended here.
         // It would not fire onStartJob() when constraints are re satisfied.
     }
-
 
     private fun getValue(): Int {
         val prefs = getSharedPreferences(SERVICE_NAME, Context.MODE_PRIVATE)
@@ -47,7 +69,7 @@ class MyJobService : JobService() {
     }
 
     fun notifyJobFinished() {
-        Log.d(MyJobService::class.java.simpleName, "Job finished. Calling jobFinished()")
+        Log.e(TAG, "Job finished. Calling jobFinished()")
         val prefs = getSharedPreferences(SERVICE_NAME, Context.MODE_PRIVATE)
         // Try to fetch a preference.
         prefs.edit().putInt(SAVED_INT_KEY, 0).apply()
@@ -63,7 +85,7 @@ class MyJobService : JobService() {
      */
     inner class CounterTask(
         private val params: MyJobService,
-        var startInt: Int
+        private var startInt: Int
     ) : AsyncTask<Unit, Int, Unit>() {
 
         private val LIMIT = 100
@@ -79,7 +101,7 @@ class MyJobService : JobService() {
             for (i in start..LIMIT) {
                 if (!isCancelled) {         // Execute only if job is not cancelled. on every
                     // stopJob() we will cancel this CounterTask
-                    Thread.sleep(400)
+                    Thread.sleep(500)
                     if (startInt < LIMIT) {
                         publishProgress(startInt++)
                     }
@@ -89,7 +111,7 @@ class MyJobService : JobService() {
 
         // Write the completed status after each work is finished.
         override fun onProgressUpdate(vararg values: Int?) {
-            Log.d(MyJobService::class.java.simpleName, "Counter value: ${values[0]}")
+            Log.e(TAG, "CounterTask - value: ${values[0]}")
             val prefs = params.getSharedPreferences(SERVICE_NAME, Context.MODE_PRIVATE)
             // Try to fetch a preference and add current progress.
             values[0]?.let { prefs.edit().putInt(SAVED_INT_KEY, it).commit() }
@@ -97,11 +119,26 @@ class MyJobService : JobService() {
 
         // Once job is finished, reset the preferences.
         override fun onPostExecute(result: Unit?) {
+            val serviceToActivityIntent = Intent()
+            serviceToActivityIntent.action = MainActivity.ACTION
+            serviceToActivityIntent.putExtra(MainActivity.BUNDLE_KEY_DATA, true)
+            sendBroadcast(serviceToActivityIntent)
             params.notifyJobFinished()
+        }
+
+        override fun onCancelled() {
+            Log.e(TAG, "CounterTask - onCancelled")
+            super.onCancelled()
+        }
+
+        override fun onCancelled(result: Unit?) {
+            Log.e(TAG, "CounterTask - onCancelled(result: Unit?)")
+            super.onCancelled(result)
         }
     }
 
     companion object {
         const val SERVICE_NAME = "my_service"
+        const val TAG = "LOG_TAG_MyJobService"
     }
 }
