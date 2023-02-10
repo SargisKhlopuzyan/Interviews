@@ -60,8 +60,11 @@ class HomeFragment : BaseFragment() {
                         onStartJobIntentServiceClicked = {
                             onStartJobIntentService()
                         },
-                        onNavigateServiceScreenClicked = {
-                            navigateToServiceScreen()
+                        onNavigateServicesScreenClicked = {
+                            navigateToServicesScreen()
+                        },
+                        onNavigateMusicListScreenClicked = {
+                            navigateToMusicListScreen()
                         }
                     )
                 }
@@ -88,7 +91,11 @@ class HomeFragment : BaseFragment() {
         MyJobIntentService.enqueueWork(requireActivity(), mIntent)
     }
 
-    private fun navigateToServiceScreen() {
+    private fun navigateToServicesScreen() {
+        HomeFragmentDirections.actionNavigationHomeToServicesFragment()
+            .navigate()
+    }
+    private fun navigateToMusicListScreen() {
         HomeFragmentDirections.actionNavigationHomeToMusicListFragment(
             "xxxxx"
 //                AddMultiTextArgument(

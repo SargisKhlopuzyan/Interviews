@@ -15,7 +15,8 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onStartJobScheduleClicked: () -> Unit,
     onStartJobIntentServiceClicked: () -> Unit,
-    onNavigateServiceScreenClicked: () -> Unit
+    onNavigateServicesScreenClicked: () -> Unit,
+    onNavigateMusicListScreenClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -36,7 +37,14 @@ fun HomeScreen(
             )
         }
         Button(onClick = {
-            onNavigateServiceScreenClicked()
+            onNavigateServicesScreenClicked()
+        }) {
+            Text(
+                text = stringResource(id = R.string.navigate_service_screen)
+            )
+        }
+        Button(onClick = {
+            onNavigateMusicListScreenClicked()
         }) {
             Text(
                 text = stringResource(id = R.string.navigate_music_list_screen)

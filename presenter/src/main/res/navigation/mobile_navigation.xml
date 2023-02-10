@@ -8,11 +8,21 @@
         android:id="@+id/navigation_home"
         android:name="com.example.presenter.ui.home.HomeFragment"
         android:label="HomeFragment">
+
+        <action
+            android:id="@+id/action_navigation_home_to_servicesFragment"
+            app:destination="@id/navigation_services_fragment" />
+
         <action
             android:id="@+id/action_navigation_home_to_musicListFragment"
             app:destination="@id/navigation_music_list_fragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_services_fragment"
+        android:name="com.example.presenter.ui.services.ServicesFragment"
+        android:label="ServicesFragment"/>
 
     <fragment
         android:id="@+id/navigation_music_list_fragment"

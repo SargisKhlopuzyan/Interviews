@@ -53,9 +53,9 @@ android {
 
 dependencies {
 
-    implementation project(path: ':presenter')
-    implementation project(path: ':domain')
     implementation project(path: ':data')
+    implementation project(path: ':domain')
+    implementation project(path: ':presenter')
 
     // Android libs
     implementation "androidx.core:core-ktx:${core_ktx_version}"

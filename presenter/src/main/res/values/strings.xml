@@ -5,4 +5,9 @@
     <string name="start_job_scheduler">Start Job Scheduler</string>
     <string name="start_job_intent_service">Start JobIntentService</string>
     <string name="navigate_music_list_screen">Navigate musics list screen</string>
+    <string name="navigate_service_screen">Navigate service screen</string>
+    <string name="start_service">Start service</string>
+    <string name="stop_service">Stop service</string>
+    <string name="bind_service">Bind service</string>
+    <string name="unbind_service">Unbind service</string>
 </resources>

@@ -4,14 +4,16 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!--    <application>-->
-    <application android:name=".ui.InterviewApplication">
+    <application>
+        <service
+            android:name=".services.MyService"
+            android:enabled="true"
+            android:exported="true" />
         <service
             android:name=".services.MyJobService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <service
             android:name=".services.MyJobIntentService"
             android:enabled="true"
